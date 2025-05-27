@@ -1,32 +1,32 @@
 <?php
-  include('../config/db.php');
   session_start();
+  include('../config/db.php');
+
   $message = "";
 
-  if (isset($_POST["email"])) {
-  $email = $_POST["email"];
-  $password = $_POST["password"];
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      $email = $_POST["email"];
+      $password = $_POST["password"];
 
-  $stmt = $conn->prepare("SELECT userPassword, userName FROM `user_data` WHERE userEmail = ?");
-  $stmt->bind_param("s", $email);
-  $stmt->execute();
-  $result = $stmt->get_result();
-  if ($result->num_rows === 1) {
-    $row = $result->fetch_assoc();
-    $hashedpass = $row["userPassword"];
-    $userName = $row["userName"];
-    if (password_verify($password, $hashedpass)) {
-      $_SESSION["username"] = $userName;
-      header("Location: index.php");
-    } else {
-      $message = "Wrong email or password";
-    }
-  } else {
-    $message = "User doesn't exist, create one account by clicking on register";
+      $stmt = $conn->prepare("SELECT userPassword, userName FROM user_data WHERE userEmail = ?");
+      $stmt->bind_param("s", $email);
+      $stmt->execute();
 
+      $result = $stmt->get_result();
+      if ($result && $result->num_rows === 1) {
+          $row = $result->fetch_assoc();
+          if (password_verify($password, $row["userPassword"])) {
+              $_SESSION["username"] = $row["userName"];
+              header("Location: index.php");
+              exit();
+          } else {
+              $message = "Wrong email or password.";
+          }
+      } else {
+          $message = "User not found.";
+      }
   }
-  $stmt->close();
-}
+
 ?>
 
 <!DOCTYPE html>
