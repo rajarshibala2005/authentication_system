@@ -4,7 +4,7 @@
 
   $message = "";
 
-  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  if (isset($_POST["email"])) {
       $email = $_POST["email"];
       $password = $_POST["password"];
 
@@ -15,8 +15,9 @@
       $result = $stmt->get_result();
       if ($result && $result->num_rows === 1) {
           $row = $result->fetch_assoc();
-          if (password_verify($password, $row["userPassword"])) {
-              $_SESSION["username"] = $row["userName"];
+          if ($password === $row["userPassword"]) {
+            $_SESSION["username"] = $row["userName"];
+            $_SESSION["role"] = $row["role"];
               header("Location: index.php");
               exit();
           } else {

@@ -10,7 +10,7 @@
     <?php
     session_start();
     if (isset($_SESSION['username'])) {
-      echo "<h2>Welcome" . $_SESSION['username'] . "</h2>";
+      echo "<h2>Welcome " . $_SESSION['username'] . "</h2>";
       echo "<p>You are logged in.</p>";
     } else {
       header("Location: login.php");

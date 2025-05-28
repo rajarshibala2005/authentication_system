@@ -6,14 +6,14 @@ $message = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['name'])) {
     $name = $_POST['name'];
     $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $password = $_POST['password'];
 
     $stmt = $conn->prepare("SELECT * FROM user_data WHERE userEmail = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    if ($result->num_rows > 0){
+    if ($result->num_rows > 0) {
         $message = "Email already exists!";
     } else {
         $stmt = $conn->prepare("INSERT INTO user_data (userName, userEmail, userPassword) VALUES (?, ?, ?)");
