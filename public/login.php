@@ -16,9 +16,9 @@
       if ($result && $result->num_rows === 1) {
           $row = $result->fetch_assoc();
           if ($password === $row["userPassword"]) {
-            $_SESSION["username"] = $row["userName"];
             $_SESSION["role"] = $row["role"];
-              header("Location: index.php");
+              $_SESSION["username"] = $row["userName"];
+              header("Location: admin/admin.php");
               exit();
           } else {
               $message = "Wrong email or password.";
